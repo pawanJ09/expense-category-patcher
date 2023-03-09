@@ -2,7 +2,7 @@ name: AWS Lambda Package and Deploy
 
 on:
   workflow_run:
-    workflows: [ "Check Python lint errors" ]
+    workflows: [ "Python Lint" ]
     branches: [ main ]
     types:
       - completed
