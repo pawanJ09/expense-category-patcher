@@ -14,11 +14,27 @@ def lambda_handler(event, context):
         print(f'Incoming API Gateway HTTP Method: {event_http_method}')
         event_path = event['requestContext']['http']['path']
         print(f'Incoming API Gateway Path: {event_path}')
-        response = table.scan()
-        print('Returning table scan response')
+        body = event['body']
+        print(f'Incoming API Gateway Body: {body}')
+        req = json.loads(body)
+        table_item = table.get_item(Key={'category': req['category']})
+        if table_item['Item']:
+            print(f'{req["category"]} found in table. Now updating')
+            response = table.update_item(Key={'category': req['category']},
+                                         UpdateExpression="set val=:v",
+                                         ExpressionAttributeValues={':v': req['val']},
+                                         ReturnValues="UPDATED_NEW")
+            print('Returning successful response')
+            return {
+                "statusCode": 404,
+                "body": json.dumps(response)
+            }
+    except (AttributeError, KeyError) as er:
+        msg = '{"message": "Category not found. Use POST instead."}'
+        print(f'Exception caught: {msg}')
         return {
-            "statusCode": 200,
-            "body": json.dumps(response['Items'])
+            "statusCode": 404,
+            "body": json.dumps(msg)
         }
     except (Exception, ClientError) as e:
         msg = e.response['Error']['Message']
