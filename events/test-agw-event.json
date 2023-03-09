@@ -1,0 +1,35 @@
+{
+   "version":"2.0",
+   "routeKey":"PATCH /categories",
+   "rawPath":"/categories",
+   "rawQueryString":"",
+   "headers":{
+      "accept":"*/*",
+      "content-length":"0",
+      "host":"fb1v5uqq90.execute-api.us-east-2.amazonaws.com",
+      "user-agent":"curl/7.79.1",
+      "x-amzn-trace-id":"Root=1-6407805d-35e1f7e604d9fe8128561bc9",
+      "x-forwarded-for":"162.204.15.64",
+      "x-forwarded-port":"443",
+      "x-forwarded-proto":"https"
+   },
+   "requestContext":{
+      "accountId":"213231460839",
+      "apiId":"fb1v5uqq90",
+      "domainName":"fb1v5uqq90.execute-api.us-east-2.amazonaws.com",
+      "domainPrefix":"fb1v5uqq90",
+      "http":{
+         "method":"GET",
+         "path":"/categories",
+         "protocol":"HTTP/1.1",
+         "sourceIp":"162.204.15.64",
+         "userAgent":"curl/7.79.1"
+      },
+      "requestId":"BbD-lj2giYcEPCw=",
+      "routeKey":"PATCH /categories",
+      "stage":"$default",
+      "time":"07/Mar/2023:18:20:13 +0000",
+      "timeEpoch":1678213213056
+   },
+   "isBase64Encoded":false
+}

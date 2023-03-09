@@ -1,0 +1,39 @@
+name: AWS Lambda Test
+
+on:
+  workflow_run:
+    workflows: [ "AWS Lambda Package and Deploy" ]
+    branches: [ main ]
+    types:
+      - completed
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.9" ]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+          role-duration-seconds: 1200
+          role-session-name: LambdaTestWorkflowSession
+      - name: Test Lambda
+        run: |
+          chmod +x ./test.sh
+          echo START
+          ./test.sh
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi;
+          echo END
