@@ -26,7 +26,7 @@ def lambda_handler(event, context):
                                          ReturnValues="UPDATED_NEW")
             print('Returning successful response')
             return {
-                "statusCode": 404,
+                "statusCode": 200,
                 "body": json.dumps(response)
             }
     except (AttributeError, KeyError) as er:
