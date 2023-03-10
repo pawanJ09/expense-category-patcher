@@ -20,15 +20,24 @@ def lambda_handler(event, context):
         table_item = table.get_item(Key={'category': req['category']})
         if table_item['Item']:
             print(f'{req["category"]} found in table. Now updating')
+            vals = list()
+            try:
+                vals = table_item['Item']['val']
+            except KeyError as ke:
+                print(f'Category has no existing val')
+            vals.extend(req['val'])
+            vals_list = list(set(vals))
+            # Converting to set and back to list to remove duplicates
             response = table.update_item(Key={'category': req['category']},
                                          UpdateExpression="set val=:v",
-                                         ExpressionAttributeValues={':v': req['val']},
+                                         ExpressionAttributeValues={':v': vals_list},
                                          ReturnValues="UPDATED_NEW")
             print('Returning successful response')
             return {
-                "statusCode": 200,
-                "body": json.dumps(response)
+                "statusCode": 200
             }
+
+
     except (AttributeError, KeyError) as er:
         msg = '{"message": "Category not found. Use POST instead."}'
         print(f'Exception caught: {msg}')
