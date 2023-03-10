@@ -24,10 +24,20 @@ def lambda_handler(event, context):
             try:
                 vals = table_item['Item']['val']
             except KeyError as ke:
+                # If existing category has no val then handle gracefully and add val from request
                 print(f'Category has no existing val')
-            vals.extend(req['val'])
-            vals_list = list(set(vals))
+            try:
+                if req['val']:
+                    vals.extend(req['val'])
+                else:
+                    # If existing request has no vals then clear all vals associated with category
+                    vals.clear()
+            except KeyError as ke:
+                # If existing request has no vals then clear all vals associated with category
+                print(f'Request has no val')
+                vals.clear()
             # Converting to set and back to list to remove duplicates
+            vals_list = list(set(vals))
             response = table.update_item(Key={'category': req['category']},
                                          UpdateExpression="set val=:v",
                                          ExpressionAttributeValues={':v': vals_list},
@@ -36,8 +46,6 @@ def lambda_handler(event, context):
             return {
                 "statusCode": 200
             }
-
-
     except (AttributeError, KeyError) as er:
         msg = '{"message": "Category not found. Use POST instead."}'
         print(f'Exception caught: {msg}')
